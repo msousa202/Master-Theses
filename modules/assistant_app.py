@@ -135,12 +135,10 @@ class VoiceAssistantApp:
         combined_context = build_scenario_prompt(scenario_data, final_answers)
         ai_answer = self.query_openai_api(combined_context)
 
-        # Ensure complete AI output is logged
         self.log_area.insert(tk.END, f"[AI Decision for {scenario_key}]:\n{ai_answer}\n\n")
         self.log_area.insert(tk.END, "--- END OF AI RESPONSE ---\n\n")
         self.log_area.see(tk.END)
 
-        # Save to CSV
         self.save_responses_to_csv(scenario_key, final_answers, ai_answer)
 
     def save_responses_to_csv(self, scenario_key, user_answers, ai_response):
