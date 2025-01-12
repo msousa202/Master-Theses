@@ -145,13 +145,14 @@ class VoiceAssistantApp:
 
     def save_responses_to_csv(self, scenario_key, user_answers, ai_response):
         """
-        Save the user answers and AI response into the CSV file.
+        Save the user answers and AI response into the CSV file, with each answer in its own column.
         """
         save_data_to_csv(
             scenario_key=scenario_key,
             user_answers=user_answers,
             ai_response=ai_response
         )
+
 
     def query_openai_api(self, prompt):
         try:
