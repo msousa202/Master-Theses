@@ -1,4 +1,3 @@
-# Refactored VoiceAssistantApp Class
 from tkinter import scrolledtext
 from tkinter import ttk
 import tkinter as tk
@@ -8,7 +7,6 @@ from openai import OpenAI
 import threading
 import os
 
-# Our helper modules
 from modules.scenario_manager import load_scenarios_from_json, build_scenario_prompt
 from modules.data_storage import save_data_to_csv
 
@@ -16,18 +14,10 @@ class VoiceAssistantApp:
     def __init__(self, master):
         self.master = master
         self.master.title("Voice Assistant with Scenarios")
-
-        # Initialize UI components and logic
         self.init_ui()
-
-        # Load scenarios from JSON
         self.load_scenarios()
-
-        # Initialize data structures
         self.user_responses = {}
         self.active_scenario_key = None
-
-        # Initialize OpenAI client
         self.init_openai_client()
 
     def init_ui(self):
