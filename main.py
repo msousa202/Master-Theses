@@ -6,6 +6,7 @@ def main():
     app = VoiceAssistantApp(root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
     root.mainloop()
+    #test
 
 if __name__ == "__main__":
     main()
