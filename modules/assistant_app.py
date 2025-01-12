@@ -144,18 +144,12 @@ class VoiceAssistantApp:
         self.save_responses_to_csv(scenario_key, final_answers, ai_answer)
 
     def save_responses_to_csv(self, scenario_key, user_answers, ai_response):
-        """Save user responses and AI decision to the CSV, avoiding duplication."""
-        # Save user answers as individual rows
-        for q_key, ans in user_answers.items():
-            save_data_to_csv(
-                scenario_key=scenario_key,
-                user_answers={q_key: ans},
-                ai_response=""
-            )
-        # Save AI response as a separate entry
+        """
+        Save the user answers and AI response into the CSV file.
+        """
         save_data_to_csv(
             scenario_key=scenario_key,
-            user_answers={},
+            user_answers=user_answers,
             ai_response=ai_response
         )
 
