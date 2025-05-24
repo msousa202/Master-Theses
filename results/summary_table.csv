@@ -1,0 +1,16 @@
+Agent,Level,Criterion,N,Mean,SD,Label
+AI,Operational,Adaptability,3,3.3333333333333335,1.5275252316519468,Moderate
+AI,Operational,Consistency of Feedback,76,3.6315789473684212,0.7274082808282731,High
+AI,Operational,Ethical Soundness,76,3.263157894736842,0.8184281039917368,Moderate
+AI,Operational,Goal Alignment,76,3.4934210526315788,0.7593568377367412,
+AI,Operational,Implementation Feasibility,76,3.5328947368421053,0.6896159622852392,High
+AI,Operational,Trust / Confidence,76,3.776315789473684,0.8140218540969083,High
+AI,Strategic,Adaptability,4,2.375,1.3768926368215255,Low
+AI,Strategic,Ethical Soundness,4,2.125,1.3149778198382918,Low
+AI,Strategic,Goal Alignment,4,2.25,1.1902380714238083,Low
+AI,Strategic,Trust / Confidence,4,2.0,1.1547005383792515,Low
+AI,Tactical,Adaptability,4,2.75,0.5,Moderate
+AI,Tactical,Ethical Soundness,4,2.416666666666667,0.5692750425533109,Low
+AI,Tactical,Goal Alignment,4,2.75,0.9574271077563381,Moderate
+AI,Tactical,Implementation Feasibility,4,3.0,0.408248290463863,Moderate
+AI,Tactical,Trust / Confidence,4,2.6666666666666665,0.2721655269759087,Moderate
