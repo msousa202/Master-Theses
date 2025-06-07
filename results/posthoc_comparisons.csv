@@ -1,0 +1,10 @@
+Agent,Criterion,Comparison,N,Z,p,Rank_Biserial
+AI,Trust / Confidence,Strategic vs Tactical,4,3.0,0.625,0.3
+AI,Trust / Confidence,Strategic vs Operational,4,0.0,0.125,0.0
+AI,Trust / Confidence,Tactical vs Operational,4,0.0,0.25,0.0
+AI,Adaptability,Strategic vs Tactical,3,1.0,0.5,0.17
+AI,Adaptability,Strategic vs Operational,3,1.0,0.5,0.17
+AI,Adaptability,Tactical vs Operational,3,1.0,0.5,0.17
+AI,Ethical Soundness,Strategic vs Tactical,4,2.5,0.5,0.25
+AI,Ethical Soundness,Strategic vs Operational,4,0.0,0.25,0.0
+AI,Ethical Soundness,Tactical vs Operational,4,0.0,0.125,0.0

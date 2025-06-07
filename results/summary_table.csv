@@ -1,16 +1,15 @@
-Agent,Level,Criterion,N,Mean,SD,Label
-AI,Operational,Adaptability,3,3.3333333333333335,1.5275252316519468,Moderate
-AI,Operational,Consistency of Feedback,76,3.6315789473684212,0.7274082808282731,High
-AI,Operational,Ethical Soundness,76,3.263157894736842,0.8184281039917368,Moderate
-AI,Operational,Goal Alignment,76,3.4934210526315788,0.7593568377367412,
-AI,Operational,Implementation Feasibility,76,3.5328947368421053,0.6896159622852392,High
-AI,Operational,Trust / Confidence,76,3.776315789473684,0.8140218540969083,High
-AI,Strategic,Adaptability,4,2.375,1.3768926368215255,Low
-AI,Strategic,Ethical Soundness,4,2.125,1.3149778198382918,Low
-AI,Strategic,Goal Alignment,4,2.25,1.1902380714238083,Low
-AI,Strategic,Trust / Confidence,4,2.0,1.1547005383792515,Low
-AI,Tactical,Adaptability,4,2.75,0.5,Moderate
-AI,Tactical,Ethical Soundness,4,2.416666666666667,0.5692750425533109,Low
-AI,Tactical,Goal Alignment,4,2.75,0.9574271077563381,Moderate
-AI,Tactical,Implementation Feasibility,4,3.0,0.408248290463863,Moderate
-AI,Tactical,Trust / Confidence,4,2.6666666666666665,0.2721655269759087,Moderate
+Agent,Level,Criterion,N,Mean,Median,Q1,Q3,SD,IQR,Label
+AI,Operational,Adaptability,3,3.3333333333333335,3.0,2.5,4.0,1.5275252316519468,1.5,Moderate
+AI,Operational,Consistency of Feedback,76,3.6315789473684212,3.5,3.0,4.0,0.7274082808282731,1.0,High
+AI,Operational,Ethical Soundness,76,3.263157894736842,3.0,3.0,4.0,0.8184281039917368,1.0,Moderate
+AI,Operational,Goal Alignment,76,3.4210526315789473,4.0,3.0,4.0,0.8833747093917637,1.0,Moderate
+AI,Operational,Implementation Feasibility,76,3.5328947368421053,3.5,3.0,4.0,0.6896159622852392,1.0,High
+AI,Operational,Trust / Confidence,76,3.736842105263158,4.0,3.0,4.0,0.8061169650885094,1.0,High
+AI,Strategic,Adaptability,4,2.375,2.25,1.375,3.25,1.3768926368215255,1.875,Low
+AI,Strategic,Ethical Soundness,4,2.125,1.75,1.375,2.5,1.3149778198382918,1.125,Low
+AI,Strategic,Goal Alignment,4,2.25,2.5,1.75,3.0,0.9574271077563381,1.25,Low
+AI,Strategic,Trust / Confidence,4,2.0,2.0,1.0,3.0,1.1547005383792515,2.0,Low
+AI,Tactical,Adaptability,4,2.75,2.666666666666667,2.3333333333333335,3.0833333333333335,0.5,0.75,Moderate
+AI,Tactical,Ethical Soundness,4,2.625,2.75,2.375,3.0,0.47871355387816905,0.625,Moderate
+AI,Tactical,Implementation Feasibility,4,3.0,3.0,2.875,3.125,0.408248290463863,0.25,Moderate
+AI,Tactical,Trust / Confidence,4,2.6666666666666665,2.6666666666666665,2.583333333333333,2.75,0.2721655269759087,0.16666666666666696,Moderate
