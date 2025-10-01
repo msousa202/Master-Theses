@@ -1,0 +1,6 @@
+Agent,Criterion,k,H,p,Epsilon_Squared
+AI,Goal Alignment,2,5.29,0.0214,0.06
+AI,Adaptability,3,0.67,0.7138,-0.17
+AI,Ethical Soundness,3,6.39,0.041,0.05
+AI,Implementation Feasibility,2,0.02,0.8759,-0.01
+AI,Trust / Confidence,3,12.52,0.0019,0.13

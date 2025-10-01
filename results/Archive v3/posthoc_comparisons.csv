@@ -1,0 +1,12 @@
+Agent,Criterion,Comparison,p_value
+AI,Ethical Soundness,Strategic vs Tactical,0.5585281236479752
+AI,Ethical Soundness,Operational vs Strategic,0.15705197792905679
+AI,Ethical Soundness,Operational vs Tactical,0.16234290730242218
+AI,Trust / Confidence,Strategic vs Tactical,0.47374209372775755
+AI,Trust / Confidence,Operational vs Strategic,0.010776684813775916
+AI,Trust / Confidence,Operational vs Tactical,0.06711597999317842
+AI,Implementation Feasibility,Operational vs Tactical,0.8777459576666525
+AI,Goal Alignment,Operational vs Strategic,0.021445729362602806
+AI,Adaptability,Strategic vs Tactical,0.8928034981678602
+AI,Adaptability,Operational vs Strategic,0.6333096046989078
+AI,Adaptability,Operational vs Tactical,0.9

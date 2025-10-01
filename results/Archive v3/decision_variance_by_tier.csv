@@ -1,0 +1,4 @@
+Level,Agent,N,DV,CI_lower,CI_upper
+Operational,AI,76,0.167,0.143,0.167
+Strategic,AI,4,0.5,0.0,0.556
+Tactical,AI,4,0.182,0.067,0.263

@@ -1,7 +1,9 @@
 import pandas as pd, numpy as np, re, sys, warnings
 from pathlib import Path
-from scipy.stats import ttest_rel, wilcoxon, friedmanchisquare
+from scipy.stats import ttest_rel, wilcoxon, friedmanchisquare, kruskal, mannwhitneyu
+from sklearn.utils import resample
 import pingouin as pg                          # pip install pingouin
+import scikit_posthocs as sp
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 FILE = "data/Exploring AI-Driven Decision-Making in Business Contexts(1-119).xlsx"
@@ -316,87 +318,69 @@ infer = pd.DataFrame(tests, columns=["Level","Criterion","N","Test","Stat","p","
 infer.to_csv(OUT/"inferential_stats.csv", index=False)
 
 # ------------------------------------------------------------------
-# 7. Friedman test for comparing across decision-making levels
+# 7. Kruskal-Wallis test for comparing across decision-making levels
 # ------------------------------------------------------------------
-friedman_results = []
+kruskal_results = []
 for agent in AGENTS:
     for crit in set(long["Criterion"]):
         data = long.query("Agent==@agent & Criterion==@crit")
         if data.empty: continue
         
-        # Prepare data for Friedman test
-        strategic = data.query("Level=='Strategic'")["Score"].values
-        tactical = data.query("Level=='Tactical'")["Score"].values
-        operational = data.query("Level=='Operational'")["Score"].values
+        # Prepare data for Kruskal-Wallis test
+        groups = [grp["Score"].values for name, grp in data.groupby("Level")]
         
-        # Ensure all arrays have the same length
-        min_len = min(len(strategic), len(tactical), len(operational))
-        if min_len < 2: continue  # Need at least 2 samples for Friedman test
+        # Ensure we have groups to compare
+        if len(groups) < 2: continue
         
-        strategic = strategic[:min_len]
-        tactical = tactical[:min_len]
-        operational = operational[:min_len]
+        # Perform Kruskal-Wallis test
+        h_stat, p_val = kruskal(*groups)
         
-        # Perform Friedman test
-        stat, p = friedmanchisquare(strategic, tactical, operational)
+        # Calculate Epsilon-squared
+        n = sum(len(g) for g in groups)
+        epsilon_squared = (h_stat - len(groups) + 1) / (n - len(groups))
         
-        # Calculate Kendall's W
-        n = min_len
-        k = 3  # number of levels
-        W = stat / (n * (k - 1))
-        
-        friedman_results.append([agent, crit, n, round(stat,2), round(p,4), round(W,2)])
+        kruskal_results.append([agent, crit, len(groups), round(h_stat, 2), round(p_val, 4), round(epsilon_squared, 2)])
 
-friedman_df = pd.DataFrame(friedman_results, 
-                         columns=["Agent","Criterion","N","Chi2","p","Kendall_W"])
-friedman_df.to_csv(OUT/"friedman_test.csv", index=False)
+kruskal_df = pd.DataFrame(kruskal_results, 
+                         columns=["Agent", "Criterion", "k", "H", "p", "Epsilon_Squared"])
+kruskal_df.to_csv(OUT/"kruskal_test.csv", index=False)
 
 # ------------------------------------------------------------------
-# 8. Post-hoc pairwise comparisons with Bonferroni correction
+# 8. Post-hoc pairwise comparisons (Mann-Whitney with Bonferroni correction)
 # ------------------------------------------------------------------
 posthoc_results = []
 for agent in AGENTS:
     for crit in set(long["Criterion"]):
         data = long.query("Agent==@agent & Criterion==@crit")
-        if data.empty: continue
-        
-        # Get scores for each level
-        strategic = data.query("Level=='Strategic'")["Score"].values
-        tactical = data.query("Level=='Tactical'")["Score"].values
-        operational = data.query("Level=='Operational'")["Score"].values
-        
-        # Ensure all arrays have the same length
-        min_len = min(len(strategic), len(tactical), len(operational))
-        if min_len < 2: continue
-        
-        strategic = strategic[:min_len]
-        tactical = tactical[:min_len]
-        operational = operational[:min_len]
-        
-        # Perform pairwise Wilcoxon tests with Bonferroni correction
-        alpha = 0.05 / 3  # Bonferroni correction for 3 comparisons
-        
-        # Strategic vs Tactical
-        w1, p1 = wilcoxon(strategic, tactical)
-        r1 = abs(w1) / (min_len * (min_len + 1) / 2)
-        
-        # Strategic vs Operational
-        w2, p2 = wilcoxon(strategic, operational)
-        r2 = abs(w2) / (min_len * (min_len + 1) / 2)
-        
-        # Tactical vs Operational
-        w3, p3 = wilcoxon(tactical, operational)
-        r3 = abs(w3) / (min_len * (min_len + 1) / 2)
-        
-        posthoc_results.extend([
-            [agent, crit, "Strategic vs Tactical", min_len, round(w1,2), round(p1,4), round(r1,2)],
-            [agent, crit, "Strategic vs Operational", min_len, round(w2,2), round(p2,4), round(r2,2)],
-            [agent, crit, "Tactical vs Operational", min_len, round(w3,2), round(p3,4), round(r3,2)]
-        ])
+        if data["Level"].nunique() < 2: continue
 
-posthoc_df = pd.DataFrame(posthoc_results,
-                         columns=["Agent","Criterion","Comparison","N","Z","p","Rank_Biserial"])
-posthoc_df.to_csv(OUT/"posthoc_comparisons.csv", index=False)
+        # Get all unique levels for this agent-criterion combination
+        levels = data["Level"].unique()
+        n_comparisons = len(levels) * (len(levels) - 1) // 2  # Number of pairwise comparisons
+        
+        # Perform Mann-Whitney tests for all pairwise comparisons
+        comparisons = []
+        for i, level1 in enumerate(levels):
+            for j, level2 in enumerate(levels):
+                if i < j:  # To avoid duplicates and self-comparisons
+                    group1 = data[data["Level"] == level1]["Score"].values
+                    group2 = data[data["Level"] == level2]["Score"].values
+                    
+                    # Mann-Whitney U test
+                    u_stat, p_val = mannwhitneyu(group1, group2, alternative='two-sided')
+                    
+                    # Apply Bonferroni correction
+                    p_corrected = min(p_val * n_comparisons, 1.0)
+                    
+                    comparisons.append([agent, crit, f"{level1} vs {level2}", 
+                                     round(u_stat, 2), round(p_val, 4), 
+                                     round(p_corrected, 4), n_comparisons])
+        
+        posthoc_results.extend(comparisons)
+
+posthoc_df_final = pd.DataFrame(posthoc_results,
+                         columns=["Agent","Criterion","Comparison","U_statistic","p_uncorrected","p_bonferroni","n_comparisons"])
+posthoc_df_final.to_csv(OUT/"posthoc_comparisons.csv", index=False)
 
 # ------------------------------------------------------------------
 # 9. pretty version of Comparative Performance Matrix --------------
@@ -408,6 +392,36 @@ print("\n==== Comparative Performance Matrix (Median and IQR) ====\n")
 print(pivot.to_string())
 
 print("\nFiles saved:")
-for f in ["summary_table.csv","inferential_stats.csv","friedman_test.csv","posthoc_comparisons.csv"]:
+for f in ["summary_table.csv","inferential_stats.csv","kruskal_test.csv","posthoc_comparisons.csv", "decision_variance_by_tier.csv"]:
     print("  •", OUT/f)
+
+# ------------------------------------------------------------------
+# 10. Decision Variance analysis (for Appendix C)
+# ------------------------------------------------------------------
+
+def decision_variance(series):
+    """MAD ÷ median, per §3.3.3."""
+    med = np.nanmedian(series)
+    mad = np.nanmedian(np.abs(series - med))
+    return mad / med if med else np.nan
+
+def bootstrap_ci(series, n_boot=10_000):
+    """BCa-style percentile CI for DV."""
+    boot = [decision_variance(resample(series, replace=True)) for _ in range(n_boot)]
+    return np.nanpercentile(boot, [2.5, 97.5])
+
+dv_rows = []
+for (lvl, ag), grp in long.groupby(["Level", "Agent"]):
+    dv_val = decision_variance(grp["Score"])
+    ci_low, ci_high = bootstrap_ci(grp["Score"])
+    n_resp = grp["ID"].nunique()
+    dv_rows.append([lvl, ag, n_resp,
+                    round(dv_val, 3), round(ci_low, 3), round(ci_high, 3)])
+
+dv_df = pd.DataFrame(dv_rows,
+                     columns=["Level", "Agent", "N", "DV", "CI_lower", "CI_upper"])
+dv_df.to_csv(OUT / "decision_variance_by_tier.csv", index=False)
+
+print("\n==== Decision-variance by tier (saved to Appendix C) ====\n")
+print(dv_df.to_string(index=False))
 

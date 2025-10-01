@@ -1,0 +1,4 @@
+Agent,Criterion,N,Chi2,p,Kendall_W
+AI,Trust / Confidence,4,4.5,0.1054,0.56
+AI,Adaptability,3,0.67,0.7165,0.11
+AI,Ethical Soundness,4,5.2,0.0743,0.65
